@@ -1,0 +1,21 @@
+{
+  "name": "diebevares",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Diego Valle"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/diebevares/diebevares",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "boostrap": "bootstrap#^4.0.0"
+  }
+}
