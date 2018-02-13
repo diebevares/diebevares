@@ -5,10 +5,10 @@ const webpack = require('webpack');
 const browserSync = require('browser-sync').create();
 const argv = require('yargs').argv;
 
-//const webpackConfigDev = require('./webpack.config.dev');
-const webpackConfigProd = require('./webpack.config.prod');
-const sassConfig = require('./sass.config');
-const config = require('./env');
+const webpackConfigDev = require('./gulp-config/webpack.config.dev');
+const webpackConfigProd = require('./gulp-config/webpack.config.prod');
+const sassConfig = require('./gulp-config/sass.config');
+const config = require('./gulp-config/env');
 
 
 const webpackError = (err, stats, callback) => {
@@ -20,8 +20,6 @@ const webpackError = (err, stats, callback) => {
 
 	if(stats.compilation.warnings.toString() != '')
 		util.log("[webpack]", stats.compilation.warnings.toString());
-	
-	
 };
 
 /* 
@@ -52,7 +50,7 @@ gulp.task('build-css:dev', () => {
 });
 
 gulp.task('webpack:dev', (callback) => {
-	webpack(require('./webpack.config.dev'), (err, stats) => {
+	webpack(webpackConfigDev, (err, stats) => {
 		webpackError(err, stats);
 		callback();
 	});
@@ -72,9 +70,18 @@ gulp.task('browser-sync', function(){
 Task
 ==========================================================
 */
-gulp.task('watch', ['build-css:dev', 'webpack:dev', 'browser-sync'], () => {
+
+gulp.task('copy-fonts', () => {
+	gulp.src([`${config.sourcePath}fonts/webfonts/**/*`])
+		.pipe(gulp.dest(`${config.outputPath}fonts/`));
+});
+
+gulp.task('watch', ['build-css:dev', 'webpack:dev', 'copy-fonts', 'browser-sync'], () => {
 	gulp.watch(
-		[`${config.sourcePath}css/**/*.scss`],
+		[
+			`${config.sourcePath}css/**/*.{scss,css}`,
+			`${config.sourcePath}fonts/**/*.{scss,css}`
+		],
 		['build-css:dev']
 	);
 	
@@ -84,4 +91,4 @@ gulp.task('watch', ['build-css:dev', 'webpack:dev', 'browser-sync'], () => {
 	);
 });
 
-gulp.task('build', ['build-css', 'webpack'], () => {});
+gulp.task('build', ['build-css', 'webpack', 'copy-fonts'], () => {});

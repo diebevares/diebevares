@@ -10,10 +10,13 @@ const AUTOPREFIXER_BROWSERS = [
 ];
 
 module.exports = (_output) => {
-	return gulp.src(`${config.sourcePath}css/**/*.scss`)
+	return gulp.src([
+				`${config.sourcePath}css/**/*.{scss,css}`,
+				`${config.sourcePath}fonts/**/*.{scss,css}`
+			])
 			.pipe(sass({ outputStyle: _output }).on('error', sass.logError))
 			.pipe(autoprefixer(AUTOPREFIXER_BROWSERS))
-			.pipe(newer('.tmp/styles'))
+			.pipe(newer(`./tmp/styles`))
 			.pipe(sourcemaps.init())
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest(`${config.outputPath}css/`));
